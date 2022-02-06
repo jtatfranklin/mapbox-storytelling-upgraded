@@ -222,7 +222,7 @@ Note: items in bold are **required**.
 
 `use3dTerrain`: Enables 3D terrain. (Optional)
 
-`useCustomLayers`: Enables adding custom sources and layers as defined in `sources.js`. (Optional)
+`useCustomLayers`: Enables adding custom sources and layers as defined in `sources.js`. You can then add these to your chapters and set opacity on/off as with the layers from Mapbox Studio. (Optional)
 
 `projection`: Enables changing the map projection. (Optional)
 
