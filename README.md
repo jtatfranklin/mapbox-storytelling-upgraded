@@ -137,9 +137,13 @@ var config = {
     showMarkers: false,
     theme: 'dark',
     use3dTerrain: true,
+    useCustomLayers: true, // for custom sources and layers added to the storymap in sources.js
+    projection: 'equirectangular', // to change map projection
+    bookmarks: true, // to add bookmarks to header and footer
     title: 'Glaciers of Glacier National Park',
     subtitle: 'Change in coverage from 1998 to 2015',
     byline: '',
+    mobileview: '<div id="rotate-mobile"><em>For optimal viewing of this storytelling map on mobile, rotate your device to a horizontal orientation.</em><br><br><img src="images/device.png">', // to add custom messaging in the header for mobile devices
     footer: 'Source: Story text from Wikipedia, August 2019. Data from <a href="https://www.usgs.gov/centers/norock/science/retreat-glaciers-glacier-national-park">USGS</a>',
     chapters: [
         {
@@ -147,6 +151,9 @@ var config = {
             alignment: 'full',
             title: 'Glacier National Park Glaciers',
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/2015-06-19_Glacier_National_Park_%28U.S.%29_8633.jpg/800px-2015-06-19_Glacier_National_Park_%28U.S.%29_8633.jpg',
+            caption: '',
+            website: '<a href="https://www.native-land.ca" target="_blank">Native Land website</a>',
+            legend: '<span style="font-size: 0.85em;"><em>Indigenous community names on the map courtesy of Native Land Digital</em></span>',
             description: 'Glacier National Park is dominated by mountains which were carved into their present shapes by the huge glaciers of the last ice age...',
             location: {
                 center: [-113.91666, 48.66451],
@@ -154,6 +161,10 @@ var config = {
                 pitch: 0.00,
                 bearing: 0.00
             },
+            mapAnimation: 'flyTo',
+            rotateAnimation: false,
+            mapInteractive: true,
+            callback: '',
             onChapterEnter: [
                 {
                     layer: 'gnpglaciers-1998',
