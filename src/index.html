@@ -95,7 +95,81 @@
             width: 100%;
         }
 
+        #rotate-mobile { 
+            display: none; 
+        }
+
+        .legend {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            color: #444;
+            background-color: #fafafa;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+            font-family: 'Montserrat', Helvetica, sans-serif;
+            padding: 10px;
+            display: none;
+            z-index: 1;
+            max-width: 350px;
+        }
+        .legend img { 
+            width: 25px;
+            margin-right: 10px;
+        }
+        .legend h3 {
+            margin: 0 0 10px;
+            font-family: 'Montserrat', Helvetica, sans-serif;
+        }
+        .legend div {
+            vertical-align: center;
+        }
+        .legend div #block {
+            display: inline-block;
+            height: 20px;
+            width: 30px;
+            margin-right: 5px;
+        }
+        .legend div #text {
+            vertical-align: top;
+        }
+        .mapboxgl-ctrl { 
+            margin-right: 30px!important;
+        }
+        .mapboxgl-popup {
+            font: 12px/20px 'Montserrat', Helvetica, sans-serif;
+        }
+
         @media (max-width: 750px) {
+            #features {
+                width: 90vw;
+                margin: 0 auto;
+            }
+			#header img { 
+				width: 80vw;
+			}
+            #header h1 {
+            font-family: 'Roboto', 'Open Sans', 'Verdana', sans-serif;
+            font-size: 1.9rem;
+            text-transform: uppercase;
+            }            
+            .lefty {
+            width: 90%;
+            }
+            .step div {
+            padding: 5px 15px;	
+        }            
+            .step div h3 {
+			font-family: 'Lora', 'Georgia', serif;
+			font-size: 1.5rem;
+			font-weight: 1000;
+		    }
+			#footer p {
+				padding: 0;
+			}
+            #rotate-mobile { 
+            display: inline-block;
+            margin-top: 25px; 
+            }
             .centered, .lefty, .righty, .fully {
                 width: 90vw;
                 margin: 0 auto;
@@ -115,6 +189,7 @@
 <div id="map"></div>
 <div id="story"></div>
 <script src="./config.js"></script>
+<script src="./sources.js"></script>
 <script>
 var layerTypes = {
     'fill': ['fill-opacity'],
@@ -151,6 +226,37 @@ function setLayerOpacity(layer) {
     });
 }
 
+   // add navigation control for interactive chapters
+   const navigation = new mapboxgl.NavigationControl();
+
+// add custom hover popups for interactive chapters
+const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            className: "workAreas-Dd"
+        }); 
+const popupHover = (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.Community_;
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+            popup.setLngLat(coordinates).setHTML(description).addTo(map);
+        }
+const popupHoverAway = () => {
+    popup.remove();
+    map.getCanvas().style.cursor = 'default';
+}
+const turnPopupsOn = (layer) => {
+    map.on('mouseenter', layer, popupHover);
+    map.on('mouseleave', layer, popupHoverAway);
+};
+const turnPopupsOff = (layer) => {
+    map.off('mouseenter', layer, popupHover);
+    map.off('mouseleave', layer, popupHoverAway);
+};
+
 var story = document.getElementById('story');
 var features = document.createElement('div');
 features.setAttribute('id', 'features');
@@ -162,6 +268,13 @@ if (config.title) {
     titleText.innerText = config.title;
     header.appendChild(titleText);
 }
+
+// add logo if found in config
+if (config.logo) {
+	var image = new Image();
+	image.src = config.logo;
+	header.appendChild(image);
+ }
 
 if (config.subtitle) {
     var subtitleText = document.createElement('h2');
@@ -197,10 +310,47 @@ config.chapters.forEach((record, idx) => {
         chapter.appendChild(image);
     }
 
+     // add image caption to chapters if found in config
+     if (record.caption) {
+        caption = document.createElement('p');
+        caption.setAttribute("class", "caption");
+        caption.innerHTML = `<em>${record.caption}</em>`;
+         chapter.appendChild(caption);
+    }
+
     if (record.description) {
         var story = document.createElement('p');
         story.innerHTML = record.description;
         chapter.appendChild(story);
+
+        // add author to chapters if found in config
+        if (record.author) {
+            author = document.createElement('p');
+            author.innerHTML = '<strong>By '+ record.author + '</strong>';
+            chapter.appendChild(author);
+        }    
+                
+        // add website to chapters if found in config
+        if (record.website) {
+            var website = document.createElement('p');
+            website.innerHTML = `» ${record.website}`;
+            chapter.appendChild(website);  
+        }
+
+        // add return to top link to each chapter
+        var returnTop = document.createElement('p');
+        returnTop.setAttribute("class", "returntop");
+        returnTop.innerHTML = '<a href="#header">Back to top</a>';
+        chapter.appendChild(returnTop);
+    }
+        
+    // add legend to chapters if found in config
+    if (record.legend) {
+        var legend = document.createElement('div');
+        legend.setAttribute("class", "legend");
+        legend.setAttribute("id", (record.id + "legend"));
+        legend.innerHTML = '<div>' + record.legend + '</div>';
+        document.body.append(legend);
     }
 
     container.setAttribute('id', record.id);
@@ -221,6 +371,32 @@ config.chapters.forEach((record, idx) => {
 story.appendChild(features);
 
 var footer = document.createElement('div');
+
+   // add bookmarks for chapters with title, append to header and footer
+if (config.bookmarks) {
+    var bookmarksText = "<strong>Bookmarks</strong>: ";
+    for (i = 0; i < config.chapters.length; i++) {
+        if (config.chapters[i].title) {
+            bookmarksText += `<a href=#${config.chapters[i].id}>${config.chapters[i].title}</a>`;
+            if (i != config.chapters.length - 1) {
+               bookmarksText += " | ";
+            }
+        }
+    }
+	var headerBookmarks = document.createElement('h5');
+	headerBookmarks.innerHTML = bookmarksText;
+	header.appendChild(headerBookmarks);
+	var footerBookmarks = document.createElement('p');
+	footerBookmarks.innerHTML = bookmarksText;
+	footer.appendChild(footerBookmarks);
+}
+	
+// add prefix content for mobile view
+if (config.mobileview) {
+	var mobileText = document.createElement('p');
+	mobileText.innerHTML = config.mobileview;
+	header.appendChild(mobileText);
+}
 
 if (config.footer) {
     var footerText = document.createElement('p');
@@ -252,7 +428,16 @@ var map = new mapboxgl.Map({
     bearing: config.chapters[0].location.bearing,
     pitch: config.chapters[0].location.pitch,
     interactive: false,
-    transformRequest: transformRequest
+    transformRequest: transformRequest,
+    // make storymap partially interactive
+    interactive: true,
+    dragPan: false,
+    dragRotate: false,
+    doubleClickZoom: false,
+    scrollZoom: false,
+    touchZoomRotate: false,
+    // set custom projection
+    projection: config.projection
 });
 
 if (config.showMarkers) {
@@ -286,6 +471,18 @@ map.on("load", function() {
         });
     };
 
+    // add custom layers
+    if (config.useCustomLayers) {
+        for (i = 0; i < externalData.sources.length; i++) {
+            let currentSource = externalData.sources[i];
+            let sourceObj = {"type": currentSource.type, "url": currentSource.url};
+            map.addSource(currentSource.name, sourceObj);
+        }
+        for (i = 0; i < externalData.layers.length; i++) {
+            map.addLayer(externalData.layers[i], 'dd-workareas'); // arrange layers beneath this layer in your Studio map
+        }
+    }
+
     // setup the instance, pass callback functions
     scroller
     .setup({
@@ -295,6 +492,24 @@ map.on("load", function() {
     })
     .onStepEnter(response => {
         var chapter = config.chapters.find(chap => chap.id === response.element.id);
+
+        // add legend to each chapter
+        if (chapter.legend) {
+            for (i = 0; i < config.chapters.length; i++) {
+                for (j = 0; j < config.chapters.length; j++) {
+                    if (("page" + j) == chapter.id) {
+                        $("#page" + j + "legend").show();
+                    } else {
+                        $("#page" + j + "legend").hide();
+                    }
+                }
+            }
+        } else {
+            for (i = 0; i < config.chapters.length; i++) {
+                $("#page" + i + "legend").hide();
+            }
+        };
+
         response.element.classList.add('active');
         map[chapter.mapAnimation || 'flyTo'](chapter.location);
         if (config.showMarkers) {
@@ -303,9 +518,22 @@ map.on("load", function() {
         if (chapter.onChapterEnter.length > 0) {
             chapter.onChapterEnter.forEach(setLayerOpacity);
         }
-        if (chapter.callback) {
-            window[chapter.callback]();
+
+        // set interactive properties for chapters set as mapInteractive = true
+        if (chapter.mapInteractive) {
+            map.addControl(navigation);
+            map.dragPan.enable();
+             map.doubleClickZoom.enable();
+             map.getCanvas().style.cursor = 'grab';                
+        } else {
+            if (map.hasControl(navigation)) {
+                 map.removeControl(navigation);     
+            }
+            map.dragPan.disable();
+            map.doubleClickZoom.disable();
+            map.getCanvas().style.cursor = 'default';
         }
+
         if (chapter.rotateAnimation) {
             map.once('moveend', function() {
                 const rotateNumber = map.getBearing();

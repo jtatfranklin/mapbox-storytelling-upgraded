@@ -211,11 +211,19 @@ Note: items in bold are **required**.
 
 `use3dTerrain`: Enables 3D terrain. (Optional)
 
+`useCustomLayers`: Enables adding custom sources and layers as defined in `sources.js`. (Optional)
+
+`projection`: Enables changing the map projection. (Optional)
+
+`bookmarks`: Enables adding bookmark links in the header and footer for each chapter. (Optional)
+
 `title`: The title of the overall story. (Optional)
 
 `subtitle`: A subtitle for the story. (Optional)
 
 `byline`: Credit the author of the story. (Optional)
+
+`mobileview`: Displays a helpful note to rotate the device when viewing the story map on a mobile. (Optional) 
 
 `footer`: Citations, credits, etc. that will be displayed at the bottom of the story.
 
@@ -226,6 +234,9 @@ Note: items in bold are **required**.
 - `hidden`: Sets the visibility of the chapter to `hidden` when `true`. The chapter will still trigger a map and layer transition.
 - `title`: The title of the section, displayed in an `h3` element.
 - `image`: The path to an image to display in this section.
+- `caption`: Adds a caption for the image.
+- `website`: Adds a website to display at the bottom of the chapter.
+- `legend`: Adds a HTML legend box for this chapter.
 - `description`: The main story content for the section. This should be aligned with what the reader is seeing on the map. In the vanilla version, this field will render as HTML. Images, links, and other items can be included as HTML.
 - **`location`**: Details about the map display and camera view.
     - **`center`**: Center coordinates of the map, as `longitude, latitude`
@@ -245,6 +256,7 @@ Note: items in bold are **required**.
             }
 ```
 - `rotateAnimation`: Starts a slow rotation animation at the end of the map transition when set to `true`. The map will rotate 90 degrees over 24 seconds.
+- `mapInteractive`: When set to `true`, sets this chapter to be interactive, allowing the user to pan and zoom across the map, and adds navigation controls.
 - `callback`: Accepts the name of a JavaScript function and executes the function. Use this if you have custom code you want to run for a chapter, like turning a legend on or off, adding data from an API request, or displaying an interactive graph.
 - `onChapterEnter`: Layers to be displayed/hidden/muted when the section becomes active. _Array of objects_
     - `layer`: Layer name as assigned in Mapbox Studio.
@@ -259,6 +271,8 @@ Add and style each custom layer in your Studio style. Before the final publish, 
 
 This will ensure that the map appears correctly when the story page loads. To adjust the opacity of the layers as the reader scrolls through the story, use the `onChapterEnter` or `onChapterExit` configuration options to set your desired opacity for the layer.
 
+You may also opt to add more sources and layers using the `useCustomLayers` configuration option above, defined in `sources.js`.
+
 ### Organization
 
 - `src`: Code for the template
@@ -268,7 +282,7 @@ This will ensure that the map appears correctly when the story page loads. To ad
 
 ## Deployment
 
-Host the `index.html` and `config.js` files in the same directory in a web-accessible location. If you don't know where to start, look into GitHub Pages or Netlify.
+Host the `index.html`, `config.js`, and `sources.js` files in the same directory in a web-accessible location. If you don't know where to start, look into GitHub Pages or Netlify.
 
 ## Built With
 
