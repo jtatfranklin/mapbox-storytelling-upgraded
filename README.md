@@ -13,6 +13,21 @@
   - [License](#license)
   - [Acknowledgments](#acknowledgments)
 
+
+# Added configuration options (this fork)
+This fork of Mapbox's Storytelling template adds a few additional configuration options to further customize the template: 
+- Adding external sources and layers (that are not part of your Studio map).
+- Changing the map projection.
+- Enabling chapter bookmarks to be added to the header and footer.
+- Adding a logo to the header.
+- Adding a helpful note to rotate the device when viewing the story map on a mobile.
+- Setting a caption for chapter images.
+- Additional chapter fields for adding a website URL and an author.
+- Adding an HTML legend box at the bottom right for a chapter.
+- Setting a chapter to be interactive (permitting zooming and zooming, and showing the navigation controls for that chapter).
+
+There is also some code for displaying popups on hover over a selected layer, for interactive chapters.
+
 # Updated to Mapbox GL JS V2.0.0
 - Set `use3dTerrain: true` for 3D maps
 
@@ -76,9 +91,13 @@ Make a copy of `config.js.template` and name it `config.js`. Open the new `confi
     markerColor: '#3FB1CE',
     theme: 'light',
     use3dTerrain: false,
+    useCustomLayers: true,
+    projection: 'equalEarth',
+    bookmarks: true.
     title: 'The Title Text of this Story',
     subtitle: 'A descriptive and interesting subtitle to draw in the reader',
     byline: 'By a Digital Storyteller',
+    mobileview: '<div id="rotate-mobile"><em>For optimal viewing of this storytelling map on mobile, rotate your device to a horizontal orientation.</em><br><br><img src="images/device.png">',
     footer: 'Source: source citations, etc.',
     chapters: [
         {
@@ -93,6 +112,10 @@ Make a copy of `config.js.template` and name it `config.js`. Open the new `confi
             hidden: false,
             title: 'Display Title',
             image: './path/to/image/source.png',
+            caption: '',
+            website: '<a href="https://www.native-land.ca" target="_blank">Native Land website</a>',
+            author: 'Rudo Kemper, Digital Democracy',
+            legend: '<span style="font-size: 0.85em;"><em>Indigenous community names on the map courtesy of Native Land Digital</em></span>',
             description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             location: {
                 center: [-122.418398, 37.759483],
@@ -102,6 +125,7 @@ Make a copy of `config.js.template` and name it `config.js`. Open the new `confi
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
+            mapInteractive: true,
             callback: '',
             onChapterEnter: [],
             onChapterExit: []
@@ -153,6 +177,7 @@ var config = {
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/2015-06-19_Glacier_National_Park_%28U.S.%29_8633.jpg/800px-2015-06-19_Glacier_National_Park_%28U.S.%29_8633.jpg',
             caption: '',
             website: '<a href="https://www.native-land.ca" target="_blank">Native Land website</a>',
+            author: 'Rudo Kemper, Digital Democracy',
             legend: '<span style="font-size: 0.85em;"><em>Indigenous community names on the map courtesy of Native Land Digital</em></span>',
             description: 'Glacier National Park is dominated by mountains which were carved into their present shapes by the huge glaciers of the last ice age...',
             location: {
@@ -246,6 +271,7 @@ Note: items in bold are **required**.
 - `title`: The title of the section, displayed in an `h3` element.
 - `image`: The path to an image to display in this section.
 - `caption`: Adds a caption for the image.
+- `author` : Adds an author to display at the bottom of the chapter.
 - `website`: Adds a website to display at the bottom of the chapter.
 - `legend`: Adds a HTML legend box for this chapter.
 - `description`: The main story content for the section. This should be aligned with what the reader is seeing on the map. In the vanilla version, this field will render as HTML. Images, links, and other items can be included as HTML.
