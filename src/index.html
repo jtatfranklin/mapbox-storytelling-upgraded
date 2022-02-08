@@ -348,7 +348,7 @@ config.chapters.forEach((record, idx) => {
     if (record.legend) {
         var legend = document.createElement('div');
         legend.setAttribute("class", "legend");
-        legend.setAttribute("id", (record.id + "legend"));
+        legend.setAttribute("id", (record.id + "Legend"));
         legend.innerHTML = '<div>' + record.legend + '</div>';
         document.body.append(legend);
     }
@@ -494,20 +494,14 @@ map.on("load", function() {
         var chapter = config.chapters.find(chap => chap.id === response.element.id);
 
         // add legend to each chapter
-        if (chapter.legend) {
-            for (i = 0; i < config.chapters.length; i++) {
-                for (j = 0; j < config.chapters.length; j++) {
-                    if (("page" + j) == chapter.id) {
-                        $("#page" + j + "legend").show();
-                    } else {
-                        $("#page" + j + "legend").hide();
-                    }
+        for (i = 0; i < config.chapters.length; i++) {
+            if (config.chapters[i].legend != undefined) {
+                if (config.chapters[i].id == response.element.id) { 
+                    document.getElementById(config.chapters[i].id + "Legend").style.display = "block";
+                } else {
+                    document.getElementById(config.chapters[i].id + "Legend").style.display = "none";
                 }
-            }
-        } else {
-            for (i = 0; i < config.chapters.length; i++) {
-                $("#page" + i + "legend").hide();
-            }
+            }                
         };
 
         response.element.classList.add('active');
