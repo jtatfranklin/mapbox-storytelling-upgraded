@@ -226,24 +226,23 @@ function setLayerOpacity(layer) {
     });
 }
 
-   // add navigation control for interactive chapters
-   const navigation = new mapboxgl.NavigationControl();
+// add navigation control for interactive chapters
+const navigation = new mapboxgl.NavigationControl();
 
 // add custom hover popups for interactive chapters
 const popup = new mapboxgl.Popup({
-            closeButton: false,
-            closeOnClick: false,
-            className: "workAreas-Dd"
-        }); 
+    closeButton: false,
+    closeOnClick: false,
+}); 
 const popupHover = (e) => {
-            map.getCanvas().style.cursor = 'pointer';
-            const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Community_;
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
-            popup.setLngLat(coordinates).setHTML(description).addTo(map);
-        }
+    map.getCanvas().style.cursor = 'pointer';
+    const coordinates = e.features[0].geometry.coordinates.slice();
+    const description = e.features[0].properties.Community_;
+    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    }
+    popup.setLngLat(coordinates).setHTML(description).addTo(map);
+}
 const popupHoverAway = () => {
     popup.remove();
     map.getCanvas().style.cursor = 'default';
@@ -338,10 +337,12 @@ config.chapters.forEach((record, idx) => {
         }
 
         // add return to top link to each chapter
-        var returnTop = document.createElement('p');
-        returnTop.setAttribute("class", "returntop");
-        returnTop.innerHTML = '<a href="#header">Back to top</a>';
-        chapter.appendChild(returnTop);
+        if (config.chapterReturn) {
+            var returnTop = document.createElement('p');
+            returnTop.setAttribute("class", "returntop");
+            returnTop.innerHTML = '<a href="#header">Back to top</a>';
+            chapter.appendChild(returnTop);
+        }
     }
         
     // add legend to chapters if found in config
@@ -372,7 +373,7 @@ story.appendChild(features);
 
 var footer = document.createElement('div');
 
-   // add bookmarks for chapters with title, append to header and footer
+// add bookmarks for chapters with title, append to header and footer
 if (config.bookmarks) {
     var bookmarksText = "<strong>Bookmarks</strong>: ";
     for (i = 0; i < config.chapters.length; i++) {

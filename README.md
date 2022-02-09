@@ -14,19 +14,22 @@
   - [Acknowledgments](#acknowledgments)
 
 
-# Added configuration options (this fork)
-This fork of Mapbox's Storytelling template adds a few additional configuration options to further customize the template: 
-- Adding external sources and layers (that are not part of your Studio map).
+# Added configuration options (this fork by Digital Democracy)
+This fork of Mapbox's Storytelling template by Digital Democracy adds a few additional optional configuration options to further customize the template: 
+
+- Ability to add external sources and layers (that are not part of your Studio map).
 - Changing the map projection.
 - Enabling chapter bookmarks to be added to the header and footer.
 - Adding a logo to the header.
-- Adding a helpful note to rotate the device when viewing the story map on a mobile.
+- Adding a helpful note to rotate the device that shows when viewing the story map on a mobile.
 - Setting a caption for chapter images.
 - Additional chapter fields for adding a website URL and an author.
 - Adding an HTML legend box at the bottom right for a chapter.
-- Setting a chapter to be interactive (permitting zooming and zooming, and showing the navigation controls for that chapter).
+- Setting a chapter to be interactive (permitting zooming and panning, and showing the navigation controls for that chapter).
 
-There is also some code for displaying popups on hover over a selected layer, for interactive chapters.
+These properties are described in the Configuration Options below. They have also been inserted into the ` config.js.template` in the `src` directory. The relevant code is indicated with comments in the `index.html` file in the `src` directory.
+
+There is also some code for displaying popups on hover over a selected layer, for interactive chapters. The functions `turnPopupsOn(layer)` and `turnPopupsOff(layer)` can be turned off using chapter callbacks. You can find these functions in `src/index.html` if you want to change the behavior (like setting them to open on click instead of hover).
 
 # Updated to Mapbox GL JS V2.0.0
 - Set `use3dTerrain: true` for 3D maps
@@ -93,7 +96,7 @@ Make a copy of `config.js.template` and name it `config.js`. Open the new `confi
     use3dTerrain: false,
     useCustomLayers: true,
     projection: 'equalEarth',
-    bookmarks: true.
+    bookmarks: true,
     title: 'The Title Text of this Story',
     subtitle: 'A descriptive and interesting subtitle to draw in the reader',
     byline: 'By a Digital Storyteller',
@@ -164,7 +167,9 @@ var config = {
     useCustomLayers: true, // for custom sources and layers added to the storymap in sources.js
     projection: 'equirectangular', // to change map projection
     bookmarks: true, // to add bookmarks to header and footer
+    chapterReturn: true, // to add a Return to Top link at the bottom of each footer
     title: 'Glaciers of Glacier National Park',
+    logo: 'images/Digital Democracy.png', // to add a logo to the header
     subtitle: 'Change in coverage from 1998 to 2015',
     byline: '',
     mobileview: '<div id="rotate-mobile"><em>For optimal viewing of this storytelling map on mobile, rotate your device to a horizontal orientation.</em><br><br><img src="images/device.png">', // to add custom messaging in the header for mobile devices
@@ -191,6 +196,10 @@ var config = {
             mapInteractive: true,
             callback: '',
             onChapterEnter: [
+                {
+                    layer: 'nativeland', // this source and layer is defined in `sources.js`
+                    opacity: 1
+                }
                 {
                     layer: 'gnpglaciers-1998',
                     opacity: 0.25
@@ -247,19 +256,23 @@ Note: items in bold are **required**.
 
 `use3dTerrain`: Enables 3D terrain. (Optional)
 
-`useCustomLayers`: Enables adding custom sources and layers as defined in `sources.js`. You can then add these to your chapters and set opacity on/off as with the layers from Mapbox Studio. (Optional)
+(NEW) `useCustomLayers`: Enables adding custom sources and layers as defined in `sources.js`. You can then add these to your chapters and set opacity on/off, in the same way as the layers from your Mapbox Studio map. (Optional)
 
-`projection`: Enables changing the map projection. (Optional)
+(NEW) `projection`: Enables changing the map projection. See the different projection options [here](https://docs.mapbox.com/mapbox-gl-js/example/projections/). (Optional)
 
-`bookmarks`: Enables adding bookmark links in the header and footer for each chapter. (Optional)
+(NEW) `bookmarks`: Enables adding bookmark links in the header and footer for each chapter. Bookmarks will be added for any chapter that has a title. (Optional)
+
+(NEW) `chapterReturn`: To enable a "Return to Top" link at the bottom of each chapter. (Optional)
 
 `title`: The title of the overall story. (Optional)
+
+(NEW) `logo`: Add a logo image to the header of your story. (Optional)
 
 `subtitle`: A subtitle for the story. (Optional)
 
 `byline`: Credit the author of the story. (Optional)
 
-`mobileview`: Displays a helpful note to rotate the device when viewing the story map on a mobile. (Optional) 
+(NEW) `mobileview`: Displays a helpful note to rotate the device when viewing the story map on a mobile. This is HTML content and can be modified in `config.js`. (Optional) 
 
 `footer`: Citations, credits, etc. that will be displayed at the bottom of the story.
 
@@ -270,10 +283,10 @@ Note: items in bold are **required**.
 - `hidden`: Sets the visibility of the chapter to `hidden` when `true`. The chapter will still trigger a map and layer transition.
 - `title`: The title of the section, displayed in an `h3` element.
 - `image`: The path to an image to display in this section.
-- `caption`: Adds a caption for the image.
-- `author` : Adds an author to display at the bottom of the chapter.
-- `website`: Adds a website to display at the bottom of the chapter.
-- `legend`: Adds a HTML legend box for this chapter.
+- (NEW) `caption`: Adds a caption for the image.
+- (NEW) `author` : Adds an author to display at the bottom of the chapter.
+- (NEW) `website`: Adds a website to display at the bottom of the chapter.
+- (NEW) `legend`: Adds a HTML legend box for this chapter.
 - `description`: The main story content for the section. This should be aligned with what the reader is seeing on the map. In the vanilla version, this field will render as HTML. Images, links, and other items can be included as HTML.
 - **`location`**: Details about the map display and camera view.
     - **`center`**: Center coordinates of the map, as `longitude, latitude`
@@ -293,7 +306,7 @@ Note: items in bold are **required**.
             }
 ```
 - `rotateAnimation`: Starts a slow rotation animation at the end of the map transition when set to `true`. The map will rotate 90 degrees over 24 seconds.
-- `mapInteractive`: When set to `true`, sets this chapter to be interactive, allowing the user to pan and zoom across the map, and adds navigation controls.
+- (NEW) `mapInteractive`: When set to `true`, sets this chapter to be interactive, allowing the user to pan and zoom across the map, and adds navigation controls.
 - `callback`: Accepts the name of a JavaScript function and executes the function. Use this if you have custom code you want to run for a chapter, like turning a legend on or off, adding data from an API request, or displaying an interactive graph.
 - `onChapterEnter`: Layers to be displayed/hidden/muted when the section becomes active. _Array of objects_
     - `layer`: Layer name as assigned in Mapbox Studio.
