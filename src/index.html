@@ -527,7 +527,9 @@ map.on("load", function() {
             map.doubleClickZoom.disable();
             map.getCanvas().style.cursor = 'default';
         }
-
+        if (chapter.callback) {
+            window[chapter.callback]();
+        }
         if (chapter.rotateAnimation) {
             map.once('moveend', function() {
                 const rotateNumber = map.getBearing();
