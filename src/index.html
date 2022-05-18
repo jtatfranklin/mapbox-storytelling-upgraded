@@ -628,6 +628,14 @@
                             });
                         });
                     }
+
+                    if (chapter.spinGlobe) {
+                        map.once('moveend', () => {
+                            const center = map.getCenter();
+                            const newCenter = [center.lng + 360, center.lat];
+                            map.easeTo({ center: newCenter, duration: 20000, easing: n => n });
+                        });
+                    }
                 })
                 .onStepExit(response => {
                     var chapter = config.chapters.find(chap => chap.id === response.element.id);

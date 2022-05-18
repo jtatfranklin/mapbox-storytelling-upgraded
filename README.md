@@ -26,6 +26,7 @@ This fork of Mapbox's Storytelling template by Digital Democracy adds a few addi
 - Additional chapter fields for adding a website URL and an author.
 - Adding an HTML legend box at the bottom right for a chapter.
 - Setting a chapter to be interactive (permitting zooming and panning, and showing the navigation controls for that chapter).
+- Adding a spinGlobe option to a chapter, to spin the globe for the Mapbox 3D globe projection.
 
 These properties are described in the Configuration Options below. They have also been inserted into the ` config.js.template` in the `src` directory. The relevant code is indicated with comments in the `index.html` file in the `src` directory.
 
@@ -199,6 +200,7 @@ var config = {
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
+            spinGlobe: false,
             mapInteractive: true,
             callback: '',
             onChapterEnter: [
@@ -269,6 +271,8 @@ Note: items in bold are **required**.
 (ADDED IN THIS FORK) `chapterReturn`: To enable a "Return to Top" link at the bottom of each chapter. (Optional)
 
 (ADDED IN THIS FORK) `legend`: Enables an optional legend per each chapter; adds a box with HTML content at the bottom right of the window. (Optional)
+
+(ADDED IN THIS FORK) `spinGlobe`: Spins the globe for your chapter if your map is set to the 3D globe projection.
 
 `inset`: Enables inset map. Will be disabled is legend is set to true. (Optional)
 

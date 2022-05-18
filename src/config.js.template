@@ -39,6 +39,7 @@ var config = {
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
+            spinGlobe: false,
             mapInteractive: true,
             callback: '',
             onChapterEnter: [
