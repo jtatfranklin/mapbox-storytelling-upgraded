@@ -496,7 +496,7 @@
         });
 
         // Create a inset map if enabled in config.js
-        if (config.inset && !config.legend) {
+        if (config.inset == true && config.legend == false) {
             var insetMap = new mapboxgl.Map({
                 container: 'mapInset', // container id
                 style: 'mapbox://styles/mapbox/dark-v10', //hosted style id
@@ -571,15 +571,17 @@
                     var chapter = config.chapters.find(chap => chap.id === response.element.id);
 
                     // add legend to each chapter
-                    for (i = 0; i < config.chapters.length; i++) {
-                        if (config.chapters[i].legend != undefined) {
-                            if (config.chapters[i].id == response.element.id) {
-                                document.getElementById(config.chapters[i].id + "Legend").style.display = "block";
-                            } else {
-                                document.getElementById(config.chapters[i].id + "Legend").style.display = "none";
+                    if (config.legend && !config.inset) {
+                        for (i = 0; i < config.chapters.length; i++) {
+                            if (config.chapters[i].legend != undefined) {
+                                if (config.chapters[i].id == response.element.id) {
+                                    document.getElementById(config.chapters[i].id + "Legend").style.display = "block";
+                                } else {
+                                    document.getElementById(config.chapters[i].id + "Legend").style.display = "none";
+                                }
                             }
-                        }
-                    };
+                        };
+                    }
 
                     response.element.classList.add('active');
                     map[chapter.mapAnimation || 'flyTo'](chapter.location);
