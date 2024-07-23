@@ -18,7 +18,7 @@
 This fork of Mapbox's Storytelling template by Digital Democracy adds a few additional optional configuration options to further customize the template: 
 
 - Ability to add external sources and layers (that are not part of your Studio map).
-- Changing the map projection.
+- ~~Changing the map projection.~~ (added to main Mapbox template)
 - Enabling chapter bookmarks to be added to the header and footer.
 - Adding a logo to the header.
 - Adding a helpful note to rotate the device that shows when viewing the story map on a mobile.
@@ -26,6 +26,7 @@ This fork of Mapbox's Storytelling template by Digital Democracy adds a few addi
 - Additional chapter fields for adding a website URL and an author.
 - Adding an HTML legend box at the bottom right for a chapter.
 - Setting a chapter to be interactive (permitting zooming and panning, and showing the navigation controls for that chapter).
+- Adding a spinGlobe option to a chapter, to spin the globe for the Mapbox 3D globe projection.
 
 These properties are described in the Configuration Options below. They have also been inserted into the ` config.js.template` in the `src` directory. The relevant code is indicated with comments in the `index.html` file in the `src` directory.
 
@@ -163,6 +164,12 @@ var config = {
     accessToken: 'pk.eyJ1IjoibWJ4c29sdXRpb25zIiwiYSI6ImNrMm01aG9hdTBlZGwzbXQ1ZXVrNHNmejAifQ.QHQA0N6XPWddCXtvoODHZg',
     showMarkers: false,
     theme: 'dark',
+    markerColor: '#3FB1CE',
+    projection: 'equirectangular',
+    //Read more about available projections here
+    //https://docs.mapbox.com/mapbox-gl-js/example/projections/  
+    inset: true,
+    legend: true, // if legend is set to true, inset will be disabled.
     use3dTerrain: true,
     useCustomLayers: true, // for custom sources and layers added to the storymap in sources.js
     projection: 'equirectangular', // to change map projection
@@ -193,6 +200,7 @@ var config = {
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
+            spinGlobe: false,
             mapInteractive: true,
             callback: '',
             onChapterEnter: [
@@ -256,23 +264,29 @@ Note: items in bold are **required**.
 
 `use3dTerrain`: Enables 3D terrain. (Optional)
 
-(NEW) `useCustomLayers`: Enables adding custom sources and layers as defined in `sources.js`. You can then add these to your chapters and set opacity on/off, in the same way as the layers from your Mapbox Studio map. (Optional)
+(ADDED IN THIS FORK) `useCustomLayers`: Enables adding custom sources and layers as defined in `sources.js`. You can then add these to your chapters and set opacity on/off, in the same way as the layers from your Mapbox Studio map. (Optional)
 
-(NEW) `projection`: Enables changing the map projection. See the different projection options [here](https://docs.mapbox.com/mapbox-gl-js/example/projections/). (Optional)
+(ADDED IN THIS FORK) `bookmarks`: Enables adding bookmark links in the header and footer for each chapter. Bookmarks will be added for any chapter that has a title. (Optional)
 
-(NEW) `bookmarks`: Enables adding bookmark links in the header and footer for each chapter. Bookmarks will be added for any chapter that has a title. (Optional)
+(ADDED IN THIS FORK) `chapterReturn`: To enable a "Return to Top" link at the bottom of each chapter. (Optional)
 
-(NEW) `chapterReturn`: To enable a "Return to Top" link at the bottom of each chapter. (Optional)
+(ADDED IN THIS FORK) `legend`: Enables an optional legend per each chapter; adds a box with HTML content at the bottom right of the window. (Optional)
+
+(ADDED IN THIS FORK) `spinGlobe`: Spins the globe for your chapter if your map is set to the 3D globe projection.
+
+`inset`: Enables inset map. Will be disabled is legend is set to true. (Optional)
+
+`projection`: Set the Map object's [projection parameter](https://docs.mapbox.com/mapbox-gl-js/example/projections/) to create a map with a non-Mercator projection.. (Optional)
 
 `title`: The title of the overall story. (Optional)
 
-(NEW) `logo`: Add a logo image to the header of your story. (Optional)
+(ADDED IN THIS FORK) `logo`: Add a logo image to the header of your story. (Optional)
 
 `subtitle`: A subtitle for the story. (Optional)
 
 `byline`: Credit the author of the story. (Optional)
 
-(NEW) `mobileview`: Displays a helpful note to rotate the device when viewing the story map on a mobile. This is HTML content and can be modified in `config.js`. (Optional) 
+(ADDED IN THIS FORK) `mobileview`: Displays a helpful note to rotate the device when viewing the story map on a mobile. This is HTML content and can be modified in `config.js`. (Optional) 
 
 `footer`: Citations, credits, etc. that will be displayed at the bottom of the story.
 
@@ -283,10 +297,10 @@ Note: items in bold are **required**.
 - `hidden`: Sets the visibility of the chapter to `hidden` when `true`. The chapter will still trigger a map and layer transition.
 - `title`: The title of the section, displayed in an `h3` element.
 - `image`: The path to an image to display in this section.
-- (NEW) `caption`: Adds a caption for the image.
-- (NEW) `author` : Adds an author to display at the bottom of the chapter.
-- (NEW) `website`: Adds a website to display at the bottom of the chapter.
-- (NEW) `legend`: Adds a HTML legend box for this chapter.
+- (ADDED IN THIS FORK) `caption`: Adds a caption for the image.
+- (ADDED IN THIS FORK) `author` : Adds an author to display at the bottom of the chapter.
+- (ADDED IN THIS FORK) `website`: Adds a website to display at the bottom of the chapter.
+- (ADDED IN THIS FORK) `legend`: Adds a HTML legend box for this chapter. `legend` must be enabled in the config settings above as well.
 - `description`: The main story content for the section. This should be aligned with what the reader is seeing on the map. In the vanilla version, this field will render as HTML. Images, links, and other items can be included as HTML.
 - **`location`**: Details about the map display and camera view.
     - **`center`**: Center coordinates of the map, as `longitude, latitude`
@@ -353,5 +367,22 @@ BSD 3-Clause License
 * Paige Moody and Lem Thornton for early testing and feedback
 * Chris Toomey for ushering this work through and keeping things on track
 * Journalists with stories that help us make sense of what goes around us
+* [Digital Democracy](https://www.digital-democracy.org/) and [Rudo Kemper](https://kunukumapping.com/) for [their fork](https://github.com/digidem/mapbox-storytelling-upgraded) that inspired many later features.
+* [Paul Franz](https://github.com/pkfranz) for developing customizations and providing feedback.
+
+## Notable Examples
+
+- [Connectivity Disparity Across Schools in Kazakhstan: UNICEF](https://unicef.github.io/mapbox_analysis/story/map)
+- [Saving the Nile: Aljazeera](https://interactive.aljazeera.com/aje/2020/saving-the-nile/index.html)
+- [49 Mile Map: San Francisco Chronicle](https://projects.sfchronicle.com/total-sf/49-mile-map/)
+- [Dark Vessel Detection: ICEYE](https://www.iceye.com/use-cases/security/dark-vessel-detection/interactive-demo)
+- [Nuestro Territorio Es Nuestra Vida: Digital Democracy](http://lab.digital-democracy.org/mapa-sinangoe/)
+- [The Chinese Economic Footprint In Central And Eastern Europe: CSD](https://chinacapture.csd.bg/)
+- [Safe passages: Washington Post](https://www.washingtonpost.com/graphics/2020/climate-solutions/wyoming-wildlife-corridor/)
+- [Polar Star Inn and Seipel Hut: Huttrip](https://map.huttrip.com/ )
+- [Ten Conflicts to watch in 2022: Crisis Group](https://conflicts2022.crisisgroup.org/ )
+- [The Guiana Shield: The Amazon Conservation Team](https://www.amazonteam.org/maps/guiana-shield/)
+- [Watchlist 2021: International Rescue Committee](https://theirc.github.io/watchlist2021/)
+- [A River Drained: Kontinentalist](https://cdn-images.kontinentalist.com/static-html/food-security-mekong-river-hydropower-dam-climate-change/index.html)
 
 [mapbox.com/resources#solutions](https://www.mapbox.com/resources#solutions)

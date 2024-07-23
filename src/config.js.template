@@ -3,10 +3,14 @@ var config = {
     accessToken: 'YOUR_ACCESS_TOKEN',
     showMarkers: true,
     markerColor: '#3FB1CE',
-    theme: 'light',
-    use3dTerrain: false,
-    useCustomLayers: true,
     projection: 'equirectangular',
+    //Read more about available projections here
+    //https://docs.mapbox.com/mapbox-gl-js/example/projections/  
+    inset: true,
+    legend: true, // if legend is set to true, inset will be disabled.
+    theme: 'dark',
+    use3dTerrain: false, //set true for enabling 3D maps.
+    useCustomLayers: false, //set true for enabling custom layers from sources.js
     bookmarks: true,
     chapterReturn: true,
     title: 'The Title Text of this Story',
@@ -14,7 +18,7 @@ var config = {
     subtitle: 'A descriptive and interesting subtitle to draw in the reader',
     byline: 'By a Digital Storyteller',
     mobileview: '<div id="rotate-mobile"><em>For optimal viewing of this storytelling map on mobile, rotate your device to a horizontal orientation.</em><br><br><img src="images/device.png">', // to add custom messaging in the header for mobile devices
-    footer: 'Source: source citations, etc.',
+    footer: 'Source: source citations, etc.<br> Created using <a href="https://github.com/mapbox/storytelling" target="_blank">Mapbox Storytelling</a> template.',
     chapters: [
         {
             id: 'slug-style-id',
@@ -35,6 +39,7 @@ var config = {
             },
             mapAnimation: 'flyTo',
             rotateAnimation: false,
+            spinGlobe: false,
             mapInteractive: true,
             callback: '',
             onChapterEnter: [
